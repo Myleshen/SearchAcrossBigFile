@@ -21,7 +21,7 @@
 4. Use any IDE to run the program or use maven in the command line to run the program
 
 ```shell
-mvn clean compile exec:java 1000 "src/main/resources/big.txt"
+mvn clean compile exec:java -Dexec.args="1000 src/main/resources/big.txt"
 
 java -jar target/TextFinding-1.0-SNAPSHOT.jar 1000 "src/main/resources/big.txt"
 ```
