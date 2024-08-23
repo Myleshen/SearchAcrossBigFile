@@ -18,20 +18,29 @@ import java.util.stream.Collectors;
 
 public class Main {
     static long MAX_BATCH_SIZE = 1000L;
+    static String DEFAULT_FILE_PATH = "src/main/resources/big.txt";
 
     public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
         /* Assumptions Made in the search pattern
-        * 1. Since these are all common Names they should follow Title case (Exact Match in our case)
-        * 2. For Debugging purpose / as the console might not be able to show the full result we are writing the result to output.txt in resources folder
-        * 3. The program also calculates the character off set from the start of the file which is commented out in the {@link MatchDetails}
-        * */
-        String filePathString = "src/main/resources/big.txt";
+         * 1. Since these are all common Names they should follow Title case (Exact Match in our case)
+         * 2. For Debugging purpose / as the console might not be able to show the full result we are writing the result to output.txt in resources folder
+         * 3. The program also calculates the character off set from the start of the file which is commented out in the {@link MatchDetails}
+         * */
+
+        String filePathString = DEFAULT_FILE_PATH;
+        if (args.length > 0) {
+            MAX_BATCH_SIZE = Long.parseLong(args[0]);
+            System.out.println("Setting batch size to " + MAX_BATCH_SIZE);
+        }
+        if (args.length > 1) {
+            filePathString = args[1];
+        }
         List<String> searchStrings = Arrays.asList("James,John,Robert,Michael,William,David,Richard,Charles,Joseph,Thomas,Christopher,Daniel,Paul,Mark,Donald,George,Kenneth,Steven,Edward,Brian,Ronald,Anthony,Kevin,Jason,Matthew,Gary,Timothy,Jose,Larry,Jeffrey,Frank,Scott,Eric,Stephen,Andrew,Raymond,Gregory,Joshua,Jerry,Dennis,Walter,Patrick,Peter,Harold,Douglas,Henry,Carl,Arthur,Ryan,Roger".split(","));
         List<Future<Map<String, List<MatchDetails>>>> workers = new ArrayList<>();
 
         long startTime = System.currentTimeMillis();
 
-        try(ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
+        try (ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
             long currentLine = 0L;
             long currentBatchCharOffset = 0L;
             try (BufferedReader reader = new BufferedReader(new FileReader(filePathString))) {
@@ -69,7 +78,7 @@ public class Main {
                 aggregator.getAggregatedResults().entrySet()
                         .stream()
                         .sorted(Map.Entry.comparingByKey())
-                        .map(entry -> entry.getKey()+ " --> " + entry.getValue())
+                        .map(entry -> entry.getKey() + " --> " + entry.getValue())
                         .collect(Collectors.joining("\n")), StandardCharsets.UTF_8);
 
         System.out.println("\nTime taken: " + (endTime - startTime) + "ms");
