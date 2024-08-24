@@ -13,6 +13,11 @@
 4. Aggregating the results of all the batches
 5. Writing the output to the console (And also a file for debugging purposes)
 
+## PreRequisites
+
+1. Java 21
+2. Maven
+
 ## Running the Program
 
 1. The file "big.txt" is available in the resources folder which was got from [Big Text File](https://norvig/big.txt)
